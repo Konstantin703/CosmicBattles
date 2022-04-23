@@ -28,9 +28,11 @@ public:
 
 	inline sf::Sprite getSprite() const { return *m_sprite.get(); }
 
+	BulletBase* shoot();
+
 private:
 	bool m_is_accelerating = false;
-	float m_current_rotation = 0.f;
+	float m_current_direction = 0.f;
 	
 	ShipStats m_ship_stats;
 	std::unique_ptr<sf::Sprite> m_sprite;

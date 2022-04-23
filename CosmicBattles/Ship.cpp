@@ -1,3 +1,5 @@
+
+#include "BulletBase.h"
 #include "Ship.h"
 #include "MathLibrary.h"
 #include <memory>
@@ -8,7 +10,7 @@ Ship::Ship(float in_pos_x, float in_pos_y)
 	// probably memory leak, 
 	// should be fixed in the future with sprite holder class implementation
 	sf::Texture* texture = new sf::Texture();
-	texture->loadFromFile("resourses/spaceship.png");
+	texture->loadFromFile("resources/spaceship.png");
 
 	m_sprite = std::make_unique<sf::Sprite>(sf::Sprite(*texture));
 	m_sprite->setPosition(in_pos_x, in_pos_y);
@@ -34,7 +36,7 @@ void Ship::update(float in_delta_time)
 
 	if (m_is_accelerating)
 	{
-		m_current_rotation = m_sprite->getRotation();
+		m_current_direction = m_sprite->getRotation();
 		accelerate(in_delta_time);
 	}
 
@@ -43,9 +45,15 @@ void Ship::update(float in_delta_time)
 		slowDown(in_delta_time / 2);
 	}
 
-	float delta_x = calculateSpeed()  * MathLibrary::calculateCosine(m_current_rotation, 90.f) * in_delta_time;
-	float delta_y = calculateSpeed() * MathLibrary::calculateSine(m_current_rotation, 90.f) * in_delta_time;
+	float delta_x = calculateSpeed()  * MathLibrary::calculateCosine(m_current_direction, 90.f) * in_delta_time;
+	float delta_y = calculateSpeed() * MathLibrary::calculateSine(m_current_direction, 90.f) * in_delta_time;
 	m_sprite->move(delta_x, delta_y);
+}
+
+BulletBase* Ship::shoot()
+{
+	std::cout << "Ship shoot" << std::endl;
+	return new BulletBase(m_sprite->getPosition(), m_sprite->getRotation());
 }
 
 float Ship::calculateSpeed() const

@@ -3,6 +3,7 @@
 
 #include "SFML/Graphics.hpp"
 
+#include "BulletBase.h"
 #include "Ship.h"
 
 #include <memory>
@@ -18,6 +19,9 @@ public:
 	std::unique_ptr<Ship> m_player;
 	
 	void run();
+
+	// temp
+	BulletBase* m_bullet;
 
 private:
 	const int m_screen_width = 1024;

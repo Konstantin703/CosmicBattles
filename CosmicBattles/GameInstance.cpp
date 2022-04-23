@@ -39,6 +39,10 @@ void GameInstance::processInput()
 			{
 				m_player->setIsAccelerating(true);
 			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			{
+				m_bullet = m_player->shoot();
+			}
 			break;
 		case sf::Event::KeyReleased:
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -63,11 +67,19 @@ void GameInstance::update(float delta_time)
 	{
 		m_player->update(delta_time);
 	}
+	if (m_bullet)
+	{
+		m_bullet->update(delta_time);
+	}
 }
 
 void GameInstance::render()
 {
 	m_window.clear();
 	m_window.draw(m_player->getSprite());
+	if (m_bullet)
+	{
+		m_window.draw(*m_bullet->getBullet());
+	}
 	m_window.display();
 }
