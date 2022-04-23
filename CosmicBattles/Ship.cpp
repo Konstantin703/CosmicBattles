@@ -50,6 +50,11 @@ void Ship::update(float in_delta_time)
 	m_sprite->move(delta_x, delta_y);
 }
 
+sf::Drawable* Ship::getDrawable()
+{
+	return m_sprite.get();
+}
+
 std::unique_ptr<BulletBase> Ship::shoot()
 {
 	return std::make_unique<BulletBase>(m_sprite->getPosition(), m_sprite->getRotation());

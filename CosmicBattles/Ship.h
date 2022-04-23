@@ -2,6 +2,7 @@
 #define SHIP_H
 
 #include "SFML/Graphics.hpp"
+#include "Entity.h"
 
 struct ShipStats
 {
@@ -15,21 +16,21 @@ struct ShipStats
 	float health = 0.f;
 };
 
-class Ship
+class Ship : public Entity
 {
 public:
 	Ship() = delete;
 	explicit Ship(float in_pos_x, float in_pos_y);
 
-	void update(float in_delta_time);
-
 	inline bool isAccelerating() const { return m_is_accelerating; }
 	inline void setIsAccelerating(bool in_value) { m_is_accelerating = in_value; }
 
-	inline sf::Sprite getSprite() const { return *m_sprite.get(); }
-
 	std::unique_ptr<BulletBase> shoot();
 
+	// ~ Entity class implementation
+	void update(float in_delta_time) override;
+	sf::Drawable* getDrawable() override;
+	// ~ end 
 private:
 	bool m_is_accelerating = false;
 	float m_current_direction = 0.f;

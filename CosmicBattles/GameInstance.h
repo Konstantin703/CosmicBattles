@@ -11,6 +11,7 @@
 
 class GameInstance
 {
+	using EntityVector = std::vector<std::unique_ptr<Entity>>;
 public:
 	GameInstance();
 
@@ -21,13 +22,14 @@ public:
 	void run();
 
 	// temporary variable for raw shooting
-	std::unique_ptr<BulletBase> m_bullet;
+	//std::unique_ptr<BulletBase> m_bullet;
 
 private:
 	const int m_screen_width = 1024;
 	const int m_screen_height = 768;
-
 	std::string m_game_name = "CosmicBattles";
+
+	EntityVector m_entities;
 
 	void processInput();
 	void update(float delta_time);

@@ -1,10 +1,13 @@
 #ifndef BULLET_BASE_H
 #define BULLET_BASE_H
 
-#include <memory>
 #include <SFML/Graphics.hpp>
 
-class BulletBase
+#include "Entity.h"
+
+#include <memory>
+
+class BulletBase : public Entity
 {
 public:
 	BulletBase() = delete;
@@ -16,10 +19,12 @@ public:
 	inline float getDirection() const { return m_direction; }
 	inline void setDirection(float in_value) { m_direction = in_value; }
 
-	inline sf::CircleShape* getBullet() const { return m_bullet.get(); }
+	//inline sf::CircleShape* getBullet() const { return m_bullet.get(); }
 
-	void update(float in_delta_time);
-	
+	// ~ Entity class implementation
+	void update(float in_delta_time) override;
+	sf::Drawable* getDrawable() override;
+	// ~ end 	
 	
 private:
 	float m_life_time = 0.f;

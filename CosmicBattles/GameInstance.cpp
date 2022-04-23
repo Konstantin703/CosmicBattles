@@ -3,15 +3,20 @@
 #include "GameInstance.h"
 #include "Ship.h"
 #include "BulletBase.h"
+#include "Entity.h"
 
 #include <iostream>
 
 GameInstance::GameInstance()
 {
 	m_window.create(sf::VideoMode(m_screen_width, m_screen_height), m_game_name);
-	
+
 	//TODO: randomize position and rotation closer to playable single player demo
-	m_player = std::make_unique<Ship>(500.f, 500.f);
+	//m_player = std::make_unique<Ship>(500.f, 500.f);
+	m_entities.reserve(10); 
+	m_entities.resize(0);
+	
+	m_entities.push_back(std::make_unique<Ship>(500.f, 500.f));
 }
 
 void GameInstance::run()
@@ -38,11 +43,11 @@ void GameInstance::processInput()
 		case sf::Event::KeyPressed:
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 			{
-				m_player->setIsAccelerating(true);
+				//m_player->setIsAccelerating(true);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			{
-				m_bullet = m_player->shoot();
+				//m_bullet = m_player->shoot();
 			}
 			break;
 		case sf::Event::KeyReleased:
@@ -50,10 +55,10 @@ void GameInstance::processInput()
 			{
 				break;
 			}
-			if (m_player->isAccelerating())
+			/*if (m_player->isAccelerating())
 			{
 				m_player->setIsAccelerating(false);
-			}
+			}*/
 			break;
 		case sf::Event::Closed:
 			m_window.close();
@@ -64,23 +69,18 @@ void GameInstance::processInput()
 
 void GameInstance::update(float delta_time)
 {
-	if (m_player)
+	for (auto itr = m_entities.crbegin(); itr != m_entities.crend(); ++itr)
 	{
-		m_player->update(delta_time);
-	}
-	if (m_bullet)
-	{
-		m_bullet->update(delta_time);
+		itr->get()->update(delta_time);
 	}
 }
 
 void GameInstance::render()
 {
 	m_window.clear();
-	m_window.draw(m_player->getSprite());
-	if (m_bullet)
+	for (auto itr = m_entities.crbegin(); itr != m_entities.crend(); ++itr)
 	{
-		m_window.draw(*m_bullet->getBullet());
+		m_window.draw(*itr->get()->getDrawable());
 	}
 	m_window.display();
 }
