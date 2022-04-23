@@ -1,3 +1,4 @@
+
 #include "BulletBase.h"
 #include "Ship.h"
 #include "MathLibrary.h"
@@ -51,7 +52,6 @@ void Ship::update(float in_delta_time)
 
 std::unique_ptr<BulletBase> Ship::shoot()
 {
-	std::cout << "Ship shoot" << std::endl;
 	return std::make_unique<BulletBase>(m_sprite->getPosition(), m_sprite->getRotation());
 }
 

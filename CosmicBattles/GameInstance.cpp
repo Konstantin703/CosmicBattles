@@ -2,6 +2,7 @@
 
 #include "GameInstance.h"
 #include "Ship.h"
+#include "BulletBase.h"
 
 #include <iostream>
 

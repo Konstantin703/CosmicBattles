@@ -14,5 +14,5 @@ GunBase::GunBase()
 void GunBase::releaseBullet()
 {
 	std::cout << "void GunBase::releaseBullet()" << std::endl;
-	std::cout << "Bullets available: " << m_bullets_pool.size() << std::endl;
+	//std::cout << "Bullets available: " << m_bullets_pool.size() << std::endl;
 }
