@@ -20,8 +20,8 @@ public:
 	
 	void run();
 
-	// temp
-	BulletBase* m_bullet;
+	// temporary variable for raw shooting
+	std::unique_ptr<BulletBase> m_bullet;
 
 private:
 	const int m_screen_width = 1024;

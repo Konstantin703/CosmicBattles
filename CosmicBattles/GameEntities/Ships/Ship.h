@@ -28,7 +28,7 @@ public:
 
 	inline sf::Sprite getSprite() const { return *m_sprite.get(); }
 
-	std::unique_ptr<BulletBase> shoot();
+	BulletBase* shoot();
 
 private:
 	bool m_is_accelerating = false;

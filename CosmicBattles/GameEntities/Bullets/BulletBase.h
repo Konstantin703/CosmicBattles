@@ -20,6 +20,7 @@ public:
 
 	void update(float in_delta_time);
 	
+	
 private:
 	float m_life_time = 0.f;
 	float m_direction = 0.f;

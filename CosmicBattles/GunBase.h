@@ -1,7 +1,7 @@
 #ifndef GUN_BASE_H
 #define GUN_BASE_H
 
-#include "BulletBase.h"
+#include "GameEntities/Bullets/BulletBase.h"
 #include <deque>
 #include <memory>
 
