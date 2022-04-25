@@ -4,6 +4,7 @@
 #include "MathLibrary.h"
 #include <memory>
 #include <iostream>
+#include <algorithm>
 
 Ship::Ship(float in_pos_x, float in_pos_y)
 {
@@ -12,47 +13,61 @@ Ship::Ship(float in_pos_x, float in_pos_y)
 	sf::Texture* texture = new sf::Texture();
 	texture->loadFromFile("resources/spaceship.png");
 
-	m_sprite = std::make_unique<sf::Sprite>(*texture);
+	m_sprite = std::make_shared<sf::Sprite>(*texture);
 	m_sprite->setPosition(in_pos_x, in_pos_y);
 	m_sprite->setOrigin((texture->getSize().x / 2), (texture->getSize().y / 2));
 
-	m_ship_stats.rotate_speed = 120.f;
+	m_ship_stats.max_rotate_speed = 120.f;
 	m_ship_stats.move_speed = 250.f;
 	m_ship_stats.slow_down_ratio = 2.f;
 }
 
-// TODO: divide into multiple methods
-// think about another solution of handling events
-void Ship::update(float in_delta_time)
+Ship::Ship(const Ship& in_object)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	m_sprite = in_object.m_sprite;
+
+	m_ship_stats.max_rotate_speed = in_object.m_ship_stats.max_rotate_speed;
+	m_ship_stats.move_speed = in_object.m_ship_stats.max_rotate_speed;
+	m_ship_stats.slow_down_ratio = in_object.m_ship_stats.max_rotate_speed;
+}
+
+Ship::Ship(Ship&& in_object)
+{
+	std::swap(*this, in_object);
+}
+
+Ship& Ship::operator=(Ship&& in_object)
+{
+	if (*this != in_object)
 	{
-		m_sprite->rotate(-m_ship_stats.rotate_speed * in_delta_time);
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		m_sprite->rotate(m_ship_stats.rotate_speed * in_delta_time);
+		std::swap(*this, in_object);
 	}
 
+	return *this;
+}
+
+void Ship::update(float in_delta_time)
+{
 	if (m_is_accelerating)
 	{
 		m_current_direction = m_sprite->getRotation();
 		accelerate(in_delta_time);
 	}
-
 	if (!m_is_accelerating)
 	{
-		slowDown(in_delta_time / 2);
+		slowDown(in_delta_time / m_ship_stats.slow_down_ratio);
 	}
 
 	float delta_x = calculateSpeed()  * MathLibrary::calculateCosine(m_current_direction, 90.f) * in_delta_time;
 	float delta_y = calculateSpeed() * MathLibrary::calculateSine(m_current_direction, 90.f) * in_delta_time;
 	m_sprite->move(delta_x, delta_y);
+
+	m_sprite->rotate(m_ship_stats.current_rotate_speed * in_delta_time);
 }
 
-sf::Drawable* Ship::getDrawable()
+std::shared_ptr<sf::Drawable> Ship::getDrawable()
 {
-	return m_sprite.get();
+	return m_sprite;
 }
 
 std::unique_ptr<BulletBase> Ship::shoot()
@@ -81,4 +96,14 @@ void Ship::slowDown(float in_value)
 		m_ship_stats.current_acceleration = 0.f;
 	}
 	m_ship_stats.current_acceleration -= in_value;
+}
+
+bool operator==(const Ship& left_value, const Ship& right_value)
+{
+	return &left_value == &right_value;
+}
+
+bool operator!=(const Ship& left_value, const Ship& right_value)
+{
+	return !(left_value == right_value);
 }

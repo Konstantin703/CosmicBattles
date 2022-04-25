@@ -4,20 +4,20 @@
 #include "SFML/Graphics.hpp"
 
 #include "BulletBase.h"
-#include "Ship.h"
+#include "ShipController.h"
 
 #include <memory>
 #include <string>
 
 class GameInstance
 {
-	using EntityVector = std::vector<std::unique_ptr<Entity>>;
+	using EntityVector = std::vector<std::shared_ptr<Entity>>;
 public:
 	GameInstance();
 
 	sf::RenderWindow m_window;
 
-	std::unique_ptr<Ship> m_player;
+	std::unique_ptr<ShipController> m_player_controller;
 	
 	void run();
 

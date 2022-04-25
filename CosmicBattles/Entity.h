@@ -8,7 +8,8 @@ class Entity
 {
 public:
 	virtual void update(float in_delta_time) = 0;
-	virtual sf::Drawable* getDrawable() = 0;
+	virtual std::shared_ptr<sf::Drawable> getDrawable() = 0;
+	virtual ~Entity() {};
 };
 
 #endif 
