@@ -40,7 +40,7 @@ void BulletBase::update(float in_delta_time)
 	m_bullet->move(delta_x, delta_y);
 }
 
-std::shared_ptr<sf::Drawable> BulletBase::getDrawable()
+sf::Drawable* BulletBase::getDrawable()
 {
-	return m_bullet;
+	return m_bullet.get();
 }

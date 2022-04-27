@@ -25,7 +25,7 @@ public:
 
 	// ~ Entity class implementation
 	void update(float in_delta_time) override;
-	std::shared_ptr<sf::Drawable> getDrawable() override;
+	sf::Drawable* getDrawable() override;
 	// ~ end 	
 	
 private:

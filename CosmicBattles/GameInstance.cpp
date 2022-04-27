@@ -5,6 +5,7 @@
 #include "BulletBase.h"
 #include "Entity.h"
 #include "ShipController.h"
+#include "GameWorld.h"
 
 #include <iostream>
 #include <memory>
@@ -12,16 +13,13 @@
 GameInstance::GameInstance()
 {
 	m_window.create(sf::VideoMode(m_screen_width, m_screen_height), m_game_name);
-
+	m_world = std::make_unique<GameWorld>();
 	m_player_controller = std::make_unique<ShipController>();
+
+	//TODO: randomize position and rotation closer to playable single player demo
 	std::shared_ptr<Ship> ship = std::make_shared<Ship>(500.f, 500.f);
  	m_player_controller->m_owner = std::move(ship);
-	//TODO: randomize position and rotation closer to playable single player demo
-
-	m_entities.reserve(10); 
-	m_entities.resize(0);
-	
-	m_entities.push_back(m_player_controller->m_owner);
+	m_world->m_entities.push_back(m_player_controller->m_owner);
 }
 
 void GameInstance::run()
@@ -47,12 +45,19 @@ void GameInstance::processInput()
 			m_window.close();
 		}
 		m_player_controller->handleInput(event);
+		
+		// bad, this come out of scope of controller class
+		// TODO: rework later
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
+			m_world->m_entities.push_back(m_player_controller->m_owner->shoot());
+		}
 	}
 }
 
 void GameInstance::update(float delta_time)
 {
-	for (auto itr = m_entities.crbegin(); itr != m_entities.crend(); ++itr)
+	for (auto itr = m_world->m_entities.crbegin(); itr != m_world->m_entities.crend(); ++itr)
 	{
 		itr->get()->update(delta_time);
 	}
@@ -61,7 +66,7 @@ void GameInstance::update(float delta_time)
 void GameInstance::render()
 {
 	m_window.clear();
-	for (auto itr = m_entities.crbegin(); itr != m_entities.crend(); ++itr)
+	for (auto itr = m_world->m_entities.crbegin(); itr != m_world->m_entities.crend(); ++itr)
 	{
 		m_window.draw(*itr->get()->getDrawable());
 	}

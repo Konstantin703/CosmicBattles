@@ -31,7 +31,6 @@ public:
 	virtual ~Ship() {};
 
 	Ship() = delete;
-	;
 	Ship& operator=(const Ship& in_object) = delete;
 
 	inline bool isAccelerating() const { return m_is_accelerating; }
@@ -46,7 +45,7 @@ public:
 
 	// ~ Entity class implementation
 	void update(float in_delta_time) override;
-	std::shared_ptr<sf::Drawable> getDrawable() override;
+	sf::Drawable* getDrawable() override;
 	// ~ end 
 private:
 	bool m_is_accelerating = false;

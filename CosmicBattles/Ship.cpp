@@ -65,9 +65,9 @@ void Ship::update(float in_delta_time)
 	m_sprite->rotate(m_ship_stats.current_rotate_speed * in_delta_time);
 }
 
-std::shared_ptr<sf::Drawable> Ship::getDrawable()
+sf::Drawable* Ship::getDrawable()
 {
-	return m_sprite;
+	return m_sprite.get();
 }
 
 std::unique_ptr<BulletBase> Ship::shoot()
