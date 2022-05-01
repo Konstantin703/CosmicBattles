@@ -31,8 +31,8 @@ void ShipController::handleInput(sf::Event& in_event)
 			m_owner->setIsAccelerating(false);
 		}
 	}
-	if (in_event.type == sf::Event::KeyReleased && 
-			!(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)))
+	if (in_event.type == sf::Event::KeyReleased &&
+		!(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)))
 	{
 		if (m_owner->isRotating())
 		{

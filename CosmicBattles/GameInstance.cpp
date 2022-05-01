@@ -12,7 +12,9 @@
 
 GameInstance::GameInstance()
 {
-	m_window.create(sf::VideoMode(m_screen_width, m_screen_height), m_game_name);
+	m_window.create(sf::VideoMode::getDesktopMode(), m_game_name, sf::Style::Fullscreen);
+	InitializeBackground();
+
 	m_world = std::make_unique<GameWorld>();
 	m_player_controller = std::make_unique<ShipController>();
 
@@ -40,7 +42,7 @@ void GameInstance::processInput()
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
-		if (event.type == sf::Event::Closed)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		{
 			m_window.close();
 		}
@@ -66,9 +68,33 @@ void GameInstance::update(float delta_time)
 void GameInstance::render()
 {
 	m_window.clear();
+	// draw background
+	for (auto itr = m_background.cbegin(); itr != m_background.cend(); ++itr)
+	{
+		m_window.draw(*itr->get());
+	}
+
+	// drawn entities
 	for (auto itr = m_world->m_entities.crbegin(); itr != m_world->m_entities.crend(); ++itr)
 	{
 		m_window.draw(*itr->get()->getDrawable());
 	}
 	m_window.display();
+}
+
+void GameInstance::InitializeBackground()
+{
+	sf::Texture* background_texture = new sf::Texture();
+	background_texture->loadFromFile("resources/background.png");
+	sf::Vector2i sprite_size( background_texture->getSize().x, background_texture->getSize().y );
+
+	for (size_t i = 0; i < m_window.getSize().x; i += sprite_size.x)
+	{
+		for (size_t j = 0; j < m_window.getSize().y; j += sprite_size.y)
+		{
+			std::unique_ptr<sf::Sprite> sprite = std::make_unique<sf::Sprite>(*background_texture);
+			sprite->setPosition(i, j);
+			m_background.push_back(std::move(sprite));
+		}
+	}
 }

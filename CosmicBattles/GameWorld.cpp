@@ -10,4 +10,3 @@ GameWorld::GameWorld()
 	std::shared_ptr<Ship> dummy_ship = std::make_shared<Ship>(700.f, 700.f);
 	m_entities.push_back(dummy_ship);
 }
-

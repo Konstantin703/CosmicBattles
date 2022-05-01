@@ -12,17 +12,17 @@
 
 class GameInstance
 {
+	using SpriteVector = std::vector<std::unique_ptr<sf::Sprite>>;
 public:
 	GameInstance();
 	
 	void run();
 	
 private:
-	const int m_screen_width = 1280;
-	const int m_screen_height = 900;
 	std::string m_game_name = "CosmicBattles";
 
 	sf::RenderWindow m_window;
+	SpriteVector m_background;
 	std::unique_ptr<GameWorld> m_world;
 
 	std::unique_ptr<ShipController> m_player_controller;
@@ -30,6 +30,8 @@ private:
 	void processInput();
 	void update(float delta_time);
 	void render();
+
+	void InitializeBackground();
 };
 #endif
 
