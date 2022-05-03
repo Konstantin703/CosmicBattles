@@ -4,8 +4,8 @@
 #include "SFML/Graphics.hpp"
 
 #include "BulletBase.h"
-#include "ShipController.h"
 #include "GameWorld.h"
+#include "ShipController.h"
 
 #include <memory>
 #include <string>
@@ -31,7 +31,7 @@ private:
 	void update(float delta_time);
 	void render();
 
-	void InitializeBackground();
+	void initializeBackground();
 };
 #endif
 

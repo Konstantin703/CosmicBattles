@@ -1,11 +1,12 @@
+#include "GameInstance.h"
+
 #include "SFML/System/Clock.hpp"
 
-#include "GameInstance.h"
-#include "Ship.h"
 #include "BulletBase.h"
 #include "Entity.h"
-#include "ShipController.h"
 #include "GameWorld.h"
+#include "Ship.h"
+#include "ShipController.h"
 
 #include <iostream>
 #include <memory>
@@ -13,7 +14,7 @@
 GameInstance::GameInstance()
 {
 	m_window.create(sf::VideoMode::getDesktopMode(), m_game_name, sf::Style::Fullscreen);
-	InitializeBackground();
+	initializeBackground();
 
 	m_world = std::make_unique<GameWorld>();
 	m_player_controller = std::make_unique<ShipController>();
@@ -52,7 +53,7 @@ void GameInstance::processInput()
 		// TODO: rework later
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
-			m_world->m_entities.push_back(m_player_controller->m_owner->shoot());
+			m_player_controller->m_owner->shoot(*m_world.get());
 		}
 	}
 }
@@ -61,7 +62,7 @@ void GameInstance::update(float delta_time)
 {
 	for (auto itr = m_world->m_entities.crbegin(); itr != m_world->m_entities.crend(); ++itr)
 	{
-		itr->get()->update(delta_time);
+		itr->get()->update(delta_time, *m_world.get());
 	}
 }
 
@@ -82,7 +83,7 @@ void GameInstance::render()
 	m_window.display();
 }
 
-void GameInstance::InitializeBackground()
+void GameInstance::initializeBackground()
 {
 	sf::Texture* background_texture = new sf::Texture();
 	background_texture->loadFromFile("resources/background.png");

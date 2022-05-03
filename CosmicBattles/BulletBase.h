@@ -2,9 +2,7 @@
 #define BULLET_BASE_H
 
 #include <SFML/Graphics.hpp>
-
 #include "Entity.h"
-
 #include <memory>
 
 class BulletBase : public Entity
@@ -24,7 +22,7 @@ public:
 	//inline sf::CircleShape* getBullet() const { return m_bullet.get(); }
 
 	// ~ Entity class implementation
-	void update(float in_delta_time) override;
+	void update(float in_delta_time, const GameWorld& in_world) override;
 	sf::Drawable* getDrawable() override;
 	// ~ end 	
 	

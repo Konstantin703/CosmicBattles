@@ -32,7 +32,7 @@ BulletBase::BulletBase(BulletBase&& in_object)
 	in_object.m_life_time = 0.f;
 }
 
-void BulletBase::update(float in_delta_time)
+void BulletBase::update(float in_delta_time, const GameWorld& in_world)
 {
 	float speed = 600.f;
 	float delta_x = speed  * MathLibrary::calculateCosine(m_direction, 90.f) * in_delta_time;
