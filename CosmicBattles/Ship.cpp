@@ -3,20 +3,18 @@
 #include "BulletBase.h"
 #include "GameWorld.h"
 #include "MathLibrary.h"
-
+#include "Entity.h"
 #include <memory>
 
 #include <iostream>
-//#include <algorithm>
-
 #include <vector>
 
-Ship::Ship(float in_pos_x, float in_pos_y)
-	: m_location{in_pos_x, in_pos_y}
+Ship::Ship(const sf::Texture& in_texture, const sf::Vector2f& in_position, const float in_direction)
+	: Entity{ in_texture, in_position, in_direction }
 {
 	// probably memory leak, 
 	// should be fixed in the future with sprite holder class implementation
-	sf::Texture* texture = new sf::Texture();
+	/*sf::Texture* texture = new sf::Texture();
 	texture->loadFromFile("resources/spaceship.png");
 
 	m_sprite = std::make_shared<sf::Sprite>(*texture);
@@ -25,39 +23,14 @@ Ship::Ship(float in_pos_x, float in_pos_y)
 
 	m_ship_stats.max_rotate_speed = 120.f;
 	m_ship_stats.move_speed = 250.f;
-	m_ship_stats.slow_down_ratio = 2.f;
+	m_ship_stats.slow_down_ratio = 2.f;*/
 }
 
-Ship::Ship(const Ship& in_object)
-{
-	m_sprite = in_object.m_sprite;
-	m_location = in_object.m_location;
-
-	m_ship_stats.max_rotate_speed = in_object.m_ship_stats.max_rotate_speed;
-	m_ship_stats.move_speed = in_object.m_ship_stats.max_rotate_speed;
-	m_ship_stats.slow_down_ratio = in_object.m_ship_stats.max_rotate_speed;
-}
-
-Ship::Ship(Ship&& in_object)
-{
-	std::swap(*this, in_object);
-}
-
-Ship& Ship::operator=(Ship&& in_object)
-{
-	if (*this != in_object)
-	{
-		std::swap(*this, in_object);
-	}
-
-	return *this;
-}
-
-void Ship::update(float in_delta_time, const GameWorld& in_world)
+void Ship::update(float in_delta_time)
 {
 	if (m_is_accelerating)
 	{
-		m_ship_stats.m_current_direction = m_sprite->getRotation();
+		m_ship_stats.current_direction = m_sprite->getRotation();
 		accelerate(in_delta_time);
 	}
 	if (!m_is_accelerating)
@@ -67,34 +40,24 @@ void Ship::update(float in_delta_time, const GameWorld& in_world)
 
 	m_current_reload_rate -= in_delta_time;
 
-	float delta_x = calculateSpeed()  * MathLibrary::calculateCosine(m_ship_stats.m_current_direction, 90.f) * in_delta_time;
-	float delta_y = calculateSpeed() * MathLibrary::calculateSine(m_ship_stats.m_current_direction, 90.f) * in_delta_time;
-	m_location += sf::Vector2f(delta_x, delta_y);
+	float delta_x = calculateSpeed()  * MathLibrary::calculateCosine(m_ship_stats.current_direction, 90.f) * in_delta_time;
+	float delta_y = calculateSpeed() * MathLibrary::calculateSine(m_ship_stats.current_direction, 90.f) * in_delta_time;
+	m_position += sf::Vector2f(delta_x, delta_y);
 
-	if (in_world.isOnBoarder(m_location))
-	{
-		m_is_accelerating = false;
-		m_ship_stats.m_current_direction += 180.f;
-	}
 
 	m_sprite->move(delta_x, delta_y);
 	m_sprite->rotate(m_ship_stats.current_rotate_speed * in_delta_time);
 }
-
-sf::Drawable* Ship::getDrawable()
-{
-	return m_sprite.get();
-}
-
-void Ship::shoot(GameWorld& in_world)
-{
-	if (!canShoot())
-	{
-		return;
-	}
-	m_current_reload_rate = m_reload_rate;
-	in_world.m_entities.push_back(std::make_unique<BulletBase>(m_sprite->getPosition(), m_sprite->getRotation()));
-}
+//
+//void Ship::shoot(GameWorld& in_world)
+//{
+//	if (!canShoot())
+//	{
+//		return;
+//	}
+//	m_current_reload_rate = m_reload_rate;
+//	in_world.m_entities.push_back(std::make_unique<BulletBase>(m_sprite->getPosition(), m_sprite->getRotation()));
+//}
 
 float Ship::calculateSpeed() const
 {
@@ -122,14 +85,4 @@ void Ship::slowDown(float in_value)
 bool Ship::canShoot() const
 {
 	return m_current_reload_rate <= 0.f;
-}
-
-bool operator==(const Ship& left_value, const Ship& right_value)
-{
-	return &left_value == &right_value;
-}
-
-bool operator!=(const Ship& left_value, const Ship& right_value)
-{
-	return !(left_value == right_value);
 }

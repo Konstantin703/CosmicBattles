@@ -6,6 +6,7 @@
 #include "BulletBase.h"
 #include "GameWorld.h"
 #include "ShipController.h"
+#include "AsteroidsFactory.h"
 
 #include <memory>
 #include <string>
@@ -23,7 +24,9 @@ private:
 
 	sf::RenderWindow m_window;
 	SpriteVector m_background;
+
 	std::unique_ptr<GameWorld> m_world;
+	std::unique_ptr<AsteroidsFactory> m_asteroid_manager;
 
 	std::unique_ptr<ShipController> m_player_controller;
 

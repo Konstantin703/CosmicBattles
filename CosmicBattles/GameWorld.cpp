@@ -9,8 +9,8 @@ GameWorld::GameWorld()
 	m_entities.resize(0);
 
 	// temporary
-	std::shared_ptr<Ship> dummy_ship = std::make_shared<Ship>(700.f, 700.f);
-	m_entities.push_back(dummy_ship);
+	/*std::shared_ptr<Ship> dummy_ship = std::make_shared<Ship>(700.f, 700.f);
+	m_entities.push_back(dummy_ship);*/
 }
 
 bool GameWorld::isOnBoarder(const sf::Vector2f& in_vector) const
