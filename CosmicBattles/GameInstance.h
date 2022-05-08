@@ -3,10 +3,10 @@
 
 #include "SFML/Graphics.hpp"
 
+#include "BaseFactory.h"
 #include "BulletBase.h"
 #include "GameWorld.h"
-#include "ShipController.h"
-#include "AsteroidsFactory.h"
+#include "Ship.h"
 
 #include <memory>
 #include <string>
@@ -26,9 +26,11 @@ private:
 	SpriteVector m_background;
 
 	std::unique_ptr<GameWorld> m_world;
-	std::unique_ptr<AsteroidsFactory> m_asteroid_manager;
 
-	std::unique_ptr<ShipController> m_player_controller;
+	std::unique_ptr<BaseFactory> m_asteroid_manager;
+	std::unique_ptr<BaseFactory> m_ship_manager;
+
+	std::unique_ptr<Ship> m_player;
 
 	void processInput();
 	void update(float delta_time);

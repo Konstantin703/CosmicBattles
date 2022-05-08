@@ -9,7 +9,7 @@ class Entity;
 
 class GameWorld
 {
-	using EntityVector = std::vector<std::shared_ptr<Entity>>;
+	using EntityVector = std::vector<std::unique_ptr<Entity>>;
 public:
 	GameWorld();
 

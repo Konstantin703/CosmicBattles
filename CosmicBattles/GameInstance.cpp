@@ -2,11 +2,13 @@
 
 #include "SFML/System/Clock.hpp"
 
+#include "AsteroidsFactory.h"
 #include "BulletBase.h"
 #include "Entity.h"
 #include "GameWorld.h"
 #include "Ship.h"
 #include "ShipController.h"
+#include "ShipFactory.h"
 
 #include <iostream>
 #include <memory>
@@ -17,6 +19,8 @@ GameInstance::GameInstance()
 	initializeBackground();
 
 	m_world = std::make_unique<GameWorld>();
+
+	////TODO: randomize position and rotation closer to playable single player demo
 	m_asteroid_manager = std::make_unique<AsteroidsFactory>();
 	
 	sf::Vector2f pos1{ 300.f, 400.f };
@@ -34,12 +38,14 @@ GameInstance::GameInstance()
 	pos1 = sf::Vector2f{ 900.f, 250.f };
 	m_world->m_entities.push_back(m_asteroid_manager->createEntity(pos1));
 
-	//m_player_controller = std::make_unique<ShipController>();
 
-	////TODO: randomize position and rotation closer to playable single player demo
-	//std::shared_ptr<Ship> ship = std::make_shared<Ship>(500.f, 500.f);
- //	m_player_controller->m_owner = std::move(ship);
-	//m_world->m_entities.push_back(m_player_controller->m_owner);
+	m_ship_manager = std::make_unique<ShipFactory>();
+	pos1 = sf::Vector2f{ 1200.f, 800.f };
+
+
+	m_world->m_entities.push_back(m_ship_manager->createEntity(pos1));
+	
+	
 }
 
 void GameInstance::run()

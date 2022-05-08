@@ -1,8 +1,13 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#include "SFML/Graphics.hpp"
 #include "Entity.h"
+#include "SFML/Graphics.hpp"
+
+#include <memory>
+#include "ShipController.h"
+
+class ShipController;
 
 struct ShipStats
 {
@@ -39,7 +44,6 @@ public:
 
 	void update(float in_delta_time) override;
 
-
 private:
 	bool m_is_accelerating = false;
 	
@@ -49,6 +53,8 @@ private:
 	// ~ should be in gun 
 	
 	ShipStats m_ship_stats;
+	
+	std::unique_ptr<ShipController> m_controller;
 
 	float calculateSpeed() const;
 

@@ -1,7 +1,7 @@
 #include "GameWorld.h"
 
 #include "Entity.h"
-#include "Ship.h"
+
 
 GameWorld::GameWorld()
 {

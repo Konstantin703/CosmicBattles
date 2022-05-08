@@ -7,7 +7,7 @@ Asteroid::Asteroid(const sf::Texture& in_texture, const sf::Vector2f& in_positio
 
 void Asteroid::update(float in_delta_time)
 {
-	float rotation_rate = 300.f;
+	float rotation_rate = 200.f;
 	m_direction = in_delta_time * rotation_rate;
 	m_sprite->rotate(m_direction);
 }

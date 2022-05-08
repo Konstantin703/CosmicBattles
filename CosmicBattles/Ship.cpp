@@ -4,6 +4,7 @@
 #include "GameWorld.h"
 #include "MathLibrary.h"
 #include "Entity.h"
+#include "ShipController.h"
 #include <memory>
 
 #include <iostream>
@@ -12,22 +13,20 @@
 Ship::Ship(const sf::Texture& in_texture, const sf::Vector2f& in_position, const float in_direction)
 	: Entity{ in_texture, in_position, in_direction }
 {
-	// probably memory leak, 
-	// should be fixed in the future with sprite holder class implementation
-	/*sf::Texture* texture = new sf::Texture();
-	texture->loadFromFile("resources/spaceship.png");
-
-	m_sprite = std::make_shared<sf::Sprite>(*texture);
-	m_sprite->setPosition(m_location);
-	m_sprite->setOrigin((texture->getSize().x / 2), (texture->getSize().y / 2));
-
 	m_ship_stats.max_rotate_speed = 120.f;
 	m_ship_stats.move_speed = 250.f;
-	m_ship_stats.slow_down_ratio = 2.f;*/
+	m_ship_stats.slow_down_ratio = 2.f;
+
+	m_controller = std::make_unique<ShipController>();
 }
 
 void Ship::update(float in_delta_time)
 {
+	if (m_controller.get())
+	{
+		m_controller->handleInput(this);
+	}
+
 	if (m_is_accelerating)
 	{
 		m_ship_stats.current_direction = m_sprite->getRotation();
