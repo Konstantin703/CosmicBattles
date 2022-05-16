@@ -1,42 +1,41 @@
 #include "ShipController.h"
-#include "SFML/Window/Event.hpp"
 #include "Ship.h"
+#include "SFML/Window/Keyboard.hpp"
 
-void ShipController::handleInput(sf::Event& in_event)
+
+void ShipController::handleInput(Ship* in_ship)
 {
-	if (!m_owner.get())
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		return;
+		in_ship->setCurrentRotationSpeed(-in_ship->getRotationSpeed());
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		in_ship->setCurrentRotationSpeed(in_ship->getRotationSpeed());
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	{
+		in_ship->setIsAccelerating(true);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		in_ship->shoot();
 	}
 
-	switch (in_event.key.code)
+	if (sf::Event::KeyReleased && !sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-	case sf::Keyboard::Left:
-		m_owner->setCurrentRotationSpeed(-m_owner->getRotationSpeed());
-		break;
-	case sf::Keyboard::Right:
-		m_owner->setCurrentRotationSpeed(m_owner->getRotationSpeed());
-		break;
-	case sf::Keyboard::Up:
-		m_owner->setIsAccelerating(true);
-		break;
-	}
-
-	// still messy, but works
-	// TODO: refactor 
-	if (in_event.type == sf::Event::KeyReleased && !sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		if (m_owner->isAccelerating())
+		if (in_ship->isAccelerating())
 		{
-			m_owner->setIsAccelerating(false);
+			in_ship->setIsAccelerating(false);
 		}
 	}
-	if (in_event.type == sf::Event::KeyReleased && 
-			!(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)))
+
+	if (sf::Event::KeyReleased &&
+		!(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)))
 	{
-		if (m_owner->isRotating())
+		if (in_ship->isRotating())
 		{
-			m_owner->setCurrentRotationSpeed(0.f);
+			in_ship->setCurrentRotationSpeed(0.f);
 		}
 	}
 }

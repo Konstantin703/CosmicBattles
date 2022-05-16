@@ -1,20 +1,17 @@
 #ifndef SHIP_CONTROLLER_H
 #define SHIP_CONTROLLER_H
 
-#include <string>
-#include <memory>
-#include <SFML/Window.hpp>
 #include "Ship.h"
+
+class Ship;
 
 class ShipController
 {
 public:
-	ShipController() {};
-	~ShipController() {};
+	ShipController() = default;
+	~ShipController() = default;
 
-	void handleInput(sf::Event& in_event);
+	void handleInput(Ship* in_ship);
 
-	std::shared_ptr<Ship> m_owner;
-	inline Ship* getOwner() const { return m_owner.get(); }
 };
 #endif
