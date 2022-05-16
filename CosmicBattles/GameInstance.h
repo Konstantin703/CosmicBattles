@@ -9,11 +9,12 @@
 
 #include <memory>
 #include <string>
+#include <forward_list>
 
 class GameInstance
 {
 	using SpriteVector = std::vector<std::unique_ptr<sf::Sprite>>;
-	using EntityVector = std::vector<std::unique_ptr<Entity>>;
+	using EntityVector = std::forward_list<std::unique_ptr<Entity>>;
 public:
 	GameInstance();
 	

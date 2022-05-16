@@ -45,20 +45,19 @@ void Ship::update(float in_delta_time)
 	float delta_y = calculateSpeed() * MathLibrary::calculateSine(m_ship_stats.current_direction, 90.f) * in_delta_time;
 	m_position += sf::Vector2f(delta_x, delta_y);
 
-
 	m_sprite->move(delta_x, delta_y);
 	m_sprite->rotate(m_ship_stats.current_rotate_speed * in_delta_time);
 }
-//
-//void Ship::shoot(GameWorld& in_world)
-//{
-//	if (!canShoot())
-//	{
-//		return;
-//	}
-//	m_current_reload_rate = m_reload_rate;
-//	in_world.m_entities.push_back(std::make_unique<BulletBase>(m_sprite->getPosition(), m_sprite->getRotation()));
-//}
+
+void Ship::shoot()
+{
+	if (!canShoot())
+	{
+		return;
+	}
+	m_current_reload_rate = m_reload_rate;
+	std::cout << "Shoot!!!" << std::endl;
+}
 
 float Ship::calculateSpeed() const
 {

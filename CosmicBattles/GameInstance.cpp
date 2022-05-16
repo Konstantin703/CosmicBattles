@@ -12,38 +12,36 @@
 
 #include <iostream>
 #include <memory>
+#include <algorithm>
 
 GameInstance::GameInstance()
 {
 	m_window.create(sf::VideoMode::getDesktopMode(), m_game_name, sf::Style::Fullscreen);
-	//initializeBackground();
+	initializeBackground();
 
 	////TODO: randomize position and rotation closer to playable single player demo
 	m_asteroid_manager = std::make_unique<AsteroidsFactory>();
 	
 	sf::Vector2f pos1{ 300.f, 400.f };
-	m_entities.push_back(m_asteroid_manager->createEntity(pos1));
+	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
 
 	pos1 = sf::Vector2f{ 500.f, 250.f };
-	m_entities.push_back(m_asteroid_manager->createEntity(pos1));
+	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
 
 	pos1 = sf::Vector2f{ 800.f, 650.f };
-	m_entities.push_back(m_asteroid_manager->createEntity(pos1));
+	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
 
 	pos1 = sf::Vector2f{ 500.f, 950.f };
-	m_entities.push_back(m_asteroid_manager->createEntity(pos1));
+	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
 
 	pos1 = sf::Vector2f{ 900.f, 250.f };
-	m_entities.push_back(m_asteroid_manager->createEntity(pos1));
+	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
 
 
 	m_ship_manager = std::make_unique<ShipFactory>();
 	pos1 = sf::Vector2f{ 1200.f, 800.f };
 
-
-	m_entities.push_back(m_ship_manager->createEntity(pos1));
-	
-	
+	m_entities.push_front(m_ship_manager->createEntity(pos1));
 }
 
 void GameInstance::run()
@@ -68,36 +66,35 @@ void GameInstance::processInput()
 		{
 			m_window.close();
 		}
-		//m_player_controller->handleInput(event);
-		
-		// bad, this come out of scope of controller class
-		// TODO: rework later
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		{
-			//m_player_controller->m_owner->shoot(*m_world.get());
-		}
 	}
 }
 
 void GameInstance::update(float delta_time)
 {
-	for (auto itr = m_entities.crbegin(); itr != m_entities.crend(); ++itr)
+	for (auto itr = m_entities.cbegin(); itr != m_entities.cend(); ++itr)
 	{
 		itr->get()->update(delta_time);
 		// check if current instance is colliding with another
-		for (auto inner_itr = m_entities.crbegin(); inner_itr != m_entities.crend(); ++inner_itr)
+		for (auto inner_itr = m_entities.cbegin(); inner_itr != m_entities.cend(); ++inner_itr)
 		{
 			if (itr->get() == inner_itr->get())
 			{
 				continue;
 			}
 
+			if (inner_itr->get()->getEntityType() == EntityType::ET_Ship)
+			{
+				continue;
+			}
+
 			if (itr->get()->getEntityBounds().intersects(inner_itr->get()->getEntityBounds()))
 			{
-				std::cout << "Collission!!!" << std::endl;
+				inner_itr->get()->setRemove();
 			}
 		}
 	}
+
+	m_entities.remove_if([](std::unique_ptr<Entity> const & entity) { return entity->shouldRemove(); });
 }
 
 void GameInstance::render()
@@ -110,7 +107,7 @@ void GameInstance::render()
 	}
 
 	// drawn entities
-	for (auto itr = m_entities.crbegin(); itr != m_entities.crend(); ++itr)
+	for (auto itr = m_entities.cbegin(); itr != m_entities.cend(); ++itr)
 	{
 		m_window.draw(itr->get()->getDrawable());
 	}

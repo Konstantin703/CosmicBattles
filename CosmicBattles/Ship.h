@@ -39,7 +39,7 @@ public:
 
 	inline bool isRotating() { return m_ship_stats.current_rotate_speed != 0.f; }
 
-	//void shoot(GameWorld& in_world);
+	void shoot();
 	bool canShoot() const;
 
 	void update(float in_delta_time) override;

@@ -17,6 +17,10 @@ void ShipController::handleInput(Ship* in_ship)
 	{
 		in_ship->setIsAccelerating(true);
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		in_ship->shoot();
+	}
 
 	if (sf::Event::KeyReleased && !sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{

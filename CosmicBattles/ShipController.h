@@ -8,12 +8,10 @@ class Ship;
 class ShipController
 {
 public:
-	ShipController() {};
-	~ShipController() {};
+	ShipController() = default;
+	~ShipController() = default;
 
 	void handleInput(Ship* in_ship);
 
-	//std::unique_ptr<Ship> m_owner;
-	//inline Ship* getOwner() const { return m_owner.get(); }
 };
 #endif

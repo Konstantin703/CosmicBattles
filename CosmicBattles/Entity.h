@@ -40,7 +40,14 @@ public:
 	inline void setDirection(const float in_direction) { m_direction = in_direction; }
 	inline float getDirection() const { return m_direction; }
 
+	inline void setRemove() { m_should_remove = true; }
+	inline bool shouldRemove() const { return m_should_remove == true; }
+
+	inline EntityType getEntityType() const { return m_type; }
+
 protected:
+	bool m_should_remove = false;
+
 	std::unique_ptr<sf::Sprite> m_sprite;
 	sf::Vector2f m_position;
 	float m_direction;
