@@ -3,21 +3,24 @@
 
 #include "SFML/System/Vector2.hpp"
 #include <memory>
-#include <vector>
-
-class Entity;
 
 class GameWorld
 {
-	using EntityVector = std::vector<std::unique_ptr<Entity>>;
 public:
-	GameWorld();
+	static GameWorld& getInstance();
 
-	bool isOnBoarder(const sf::Vector2f& in_vector) const;
+	// no copying for singleton
+	GameWorld(const GameWorld&) = delete;
+	GameWorld& operator=(const GameWorld&) = delete;
 
-	EntityVector m_entities;
+	//bool isOnBoarder(const sf::Vector2f& in_vector) const;
+
 private:
-	const float X_BOARDER = 1200.f;
+	GameWorld() = default;
+
+	static GameWorld* instance_;
+
+	const float X_BOARDER = 1500.f;
 	const float Y_BOARDER = 900.f;
 };
 

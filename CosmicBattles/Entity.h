@@ -5,6 +5,14 @@
 #include <memory>
 #include "SFML/Graphics/Texture.hpp"
 
+enum class EntityType
+{
+	ET_Ship,
+	ET_Asteroid,
+	ET_Bullet,
+	None
+};
+
 class Entity
 {
 public:
@@ -18,7 +26,7 @@ public:
 		m_sprite->setOrigin((in_texture.getSize().x / 2), (in_texture.getSize().y / 2));
 	}
 
-	virtual ~Entity() {};
+	virtual ~Entity() = default;
 
 	// virtual method to override in child classes
 	virtual void update(float in_delta_time) = 0;
@@ -35,5 +43,7 @@ protected:
 	std::unique_ptr<sf::Sprite> m_sprite;
 	sf::Vector2f m_position;
 	float m_direction;
+	EntityType m_type = EntityType::None;
+
 };
 #endif 

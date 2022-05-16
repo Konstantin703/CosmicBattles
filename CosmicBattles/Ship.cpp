@@ -17,6 +17,8 @@ Ship::Ship(const sf::Texture& in_texture, const sf::Vector2f& in_position, const
 	m_ship_stats.move_speed = 250.f;
 	m_ship_stats.slow_down_ratio = 2.f;
 
+	m_type = EntityType::ET_Ship;
+
 	m_controller = std::make_unique<ShipController>();
 }
 
