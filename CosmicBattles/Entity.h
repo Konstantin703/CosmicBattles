@@ -31,7 +31,8 @@ public:
 	// virtual method to override in child classes
 	virtual void update(float in_delta_time) = 0;
 
-	sf::Drawable* getDrawable() const { return m_sprite.get(); }
+	sf::Drawable& getDrawable() const { return *m_sprite.get(); }
+	sf::FloatRect getEntityBounds() const { return m_sprite->getGlobalBounds(); }
 
 	inline void setPosition(const sf::Vector2f& in_position) { m_position = in_position; }
 	inline sf::Vector2f getPosition() const { return m_position; }

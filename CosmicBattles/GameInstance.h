@@ -30,8 +30,6 @@ private:
 
 	EntityVector m_entities;
 
-	std::unique_ptr<Ship> m_player;
-
 	void processInput();
 	void update(float delta_time);
 	void render();

@@ -16,7 +16,7 @@
 GameInstance::GameInstance()
 {
 	m_window.create(sf::VideoMode::getDesktopMode(), m_game_name, sf::Style::Fullscreen);
-	initializeBackground();
+	//initializeBackground();
 
 	////TODO: randomize position and rotation closer to playable single player demo
 	m_asteroid_manager = std::make_unique<AsteroidsFactory>();
@@ -84,6 +84,19 @@ void GameInstance::update(float delta_time)
 	for (auto itr = m_entities.crbegin(); itr != m_entities.crend(); ++itr)
 	{
 		itr->get()->update(delta_time);
+		// check if current instance is colliding with another
+		for (auto inner_itr = m_entities.crbegin(); inner_itr != m_entities.crend(); ++inner_itr)
+		{
+			if (itr->get() == inner_itr->get())
+			{
+				continue;
+			}
+
+			if (itr->get()->getEntityBounds().intersects(inner_itr->get()->getEntityBounds()))
+			{
+				std::cout << "Collission!!!" << std::endl;
+			}
+		}
 	}
 }
 
@@ -99,7 +112,7 @@ void GameInstance::render()
 	// drawn entities
 	for (auto itr = m_entities.crbegin(); itr != m_entities.crend(); ++itr)
 	{
-		m_window.draw(*itr->get()->getDrawable());
+		m_window.draw(itr->get()->getDrawable());
 	}
 	m_window.display();
 }
