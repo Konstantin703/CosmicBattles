@@ -13,6 +13,7 @@
 #include <iostream>
 #include <memory>
 #include <algorithm>
+#include "BulletFactory.h"
 
 GameInstance::GameInstance()
 {
@@ -42,6 +43,12 @@ GameInstance::GameInstance()
 	pos1 = sf::Vector2f{ 1200.f, 800.f };
 
 	m_entities.push_front(m_ship_manager->createEntity(pos1));
+
+	m_bullet_manager = std::make_unique<BulletFactory>();
+	pos1 = sf::Vector2f{ 1400.f, 600.f };
+
+	m_entities.push_front(m_bullet_manager->createEntity(pos1));
+	
 }
 
 void GameInstance::run()

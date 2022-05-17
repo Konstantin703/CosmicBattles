@@ -14,7 +14,7 @@
 class GameInstance
 {
 	using SpriteVector = std::vector<std::unique_ptr<sf::Sprite>>;
-	using EntityVector = std::forward_list<std::unique_ptr<Entity>>;
+	using EntityList = std::forward_list<std::unique_ptr<Entity>>;
 public:
 	GameInstance();
 	
@@ -28,8 +28,9 @@ private:
 
 	std::unique_ptr<BaseFactory> m_asteroid_manager;
 	std::unique_ptr<BaseFactory> m_ship_manager;
+	std::unique_ptr<BaseFactory> m_bullet_manager;
 
-	EntityVector m_entities;
+	EntityList m_entities;
 
 	void processInput();
 	void update(float delta_time);
