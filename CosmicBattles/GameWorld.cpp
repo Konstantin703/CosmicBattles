@@ -1,17 +1,25 @@
 #include "GameWorld.h"
+#include "Entity.h"
+#include <iostream>
+#include "GameInstance.h"
+#include "BulletFactory.h"
+#include <memory>
 
-GameWorld* GameWorld::instance_ = nullptr;
-
-GameWorld& GameWorld::getInstance()
+GameWorld::GameWorld()
 {
-	if (instance_ == nullptr)
-	{
-		instance_ = new GameWorld();
-	}
-	return *instance_;
+	std::cout << "World created " << this << std::endl;
+	m_bullet_manager = std::make_unique<BulletFactory>();
 }
 
-//bool GameWorld::isOnBoarder(const sf::Vector2f& in_vector) const
-//{
-//	return in_vector.x <= 0.f || in_vector.x >= X_BOARDER || in_vector.y <= 0.f || in_vector.y >= Y_BOARDER;
-//}
+void GameWorld::onNotify(Entity* in_entity)
+{
+	
+}
+
+void GameWorld::onFactoryNotify(Entity* in_entity)
+{
+
+	std::cout << "void GameWorld::onFactoryNotify(Entity* in_entity)" << std::endl;
+	m_entities.push_front(m_bullet_manager->createEntity(in_entity->getPosition(), in_entity->getDirection()));
+}
+

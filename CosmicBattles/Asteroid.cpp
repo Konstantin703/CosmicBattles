@@ -12,4 +12,6 @@ void Asteroid::update(float in_delta_time)
 	float rotation_rate = 200.f;
 	m_direction = in_delta_time * rotation_rate;
 	m_sprite->rotate(m_direction);
+
+	//m_listener->onNotify(this);
 }

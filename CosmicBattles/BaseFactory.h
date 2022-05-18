@@ -2,8 +2,9 @@
 #define BASE_FACTORY_H
 
 #include "SFML/Graphics/Texture.hpp"
-#include "Entity.h"
 #include <memory.h>
+
+class Entity;
 
 class BaseFactory
 {

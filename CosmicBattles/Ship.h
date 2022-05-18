@@ -33,7 +33,6 @@ public:
 	inline void setCurrentRotationSpeed(float in_value) { m_ship_stats.current_rotate_speed = in_value; }
 	inline float getRotationSpeed() const { return m_ship_stats.max_rotate_speed; }
 
-
 	inline bool isAccelerating() const { return m_is_accelerating; }
 	inline void setIsAccelerating(bool in_value) { m_is_accelerating = in_value; }
 
@@ -48,13 +47,11 @@ private:
 	bool m_is_accelerating = false;
 	
 	// should be in gun
-	float m_reload_rate = 1.f;
+	float m_reload_rate = 0.2f;
 	float m_current_reload_rate = 0.f;
 	// ~ should be in gun 
 	
 	ShipStats m_ship_stats;
-	
-	std::unique_ptr<ShipController> m_controller;
 
 	float calculateSpeed() const;
 

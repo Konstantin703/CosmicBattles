@@ -14,11 +14,13 @@
 class GameInstance
 {
 	using SpriteVector = std::vector<std::unique_ptr<sf::Sprite>>;
-	using EntityList = std::forward_list<std::unique_ptr<Entity>>;
+
 public:
 	GameInstance();
 	
 	void run();
+
+	void addEntity(std::unique_ptr<Entity> in_entity);
 	
 private:
 	std::string m_game_name = "CosmicBattles";
@@ -28,9 +30,10 @@ private:
 
 	std::unique_ptr<BaseFactory> m_asteroid_manager;
 	std::unique_ptr<BaseFactory> m_ship_manager;
-	std::unique_ptr<BaseFactory> m_bullet_manager;
+	
 
-	EntityList m_entities;
+	std::unique_ptr<ShipController> m_controller;
+	std::unique_ptr<GameWorld> m_world;
 
 	void processInput();
 	void update(float delta_time);

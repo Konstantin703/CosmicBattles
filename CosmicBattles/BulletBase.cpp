@@ -17,5 +17,7 @@ void BulletBase::update(float in_delta_time)
 	float delta_x = speed  * MathLibrary::calculateCosine(m_direction, 90.f) * in_delta_time;
 	float delta_y = speed * MathLibrary::calculateSine(m_direction, 90.f) * in_delta_time;
 	m_sprite->move(delta_x, delta_y);
+
+	//m_listener->onNotify(this);
 }
 
