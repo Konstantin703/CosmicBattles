@@ -13,24 +13,23 @@
 class Entity;
 class BaseFactory;
 
-
 class GameWorld
 {
 	using EntityList = std::forward_list<std::unique_ptr<Entity>>;
 public:
-	GameWorld();
+	GameWorld() = default;
 
-	void onNotify(Entity* in_entity);
+	void Init();
+
 	void onFactoryNotify(Entity* in_entity);
 
 	std::unique_ptr<BaseFactory> m_bullet_manager;
+	std::unique_ptr<BaseFactory> m_asteroid_manager;
+	std::unique_ptr<BaseFactory> m_ship_manager;
 
 	EntityList m_entities;
 
-
 private:
-
-
 	const float X_BOARDER = 1500.f;
 	const float Y_BOARDER = 900.f;
 };

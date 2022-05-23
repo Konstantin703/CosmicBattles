@@ -47,7 +47,7 @@ private:
 	bool m_is_accelerating = false;
 	
 	// should be in gun
-	float m_reload_rate = 0.2f;
+	float m_reload_rate = 0.f;
 	float m_current_reload_rate = 0.f;
 	// ~ should be in gun 
 	

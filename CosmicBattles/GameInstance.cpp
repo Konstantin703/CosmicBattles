@@ -1,19 +1,13 @@
 #include "GameInstance.h"
 
 #include "SFML/System/Clock.hpp"
-
-#include "AsteroidsFactory.h"
-#include "BulletBase.h"
 #include "Entity.h"
 #include "GameWorld.h"
 #include "Ship.h"
 #include "ShipController.h"
-#include "ShipFactory.h"
-
 #include <iostream>
 #include <memory>
 #include <algorithm>
-#include "BulletFactory.h"
 
 GameInstance::GameInstance()
 {
@@ -21,47 +15,18 @@ GameInstance::GameInstance()
 	initializeBackground();
 
 	m_world = std::make_unique<GameWorld>();
-	////TODO: randomize position and rotation closer to playable single player demo
-	m_asteroid_manager = std::make_unique<AsteroidsFactory>();
-
-	sf::Vector2f pos1{ 300.f, 400.f };
-	m_world->m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-	pos1 = sf::Vector2f{ 500.f, 250.f };
-	m_world->m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-	pos1 = sf::Vector2f{ 800.f, 650.f };
-	m_world->m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-	pos1 = sf::Vector2f{ 500.f, 950.f };
-	m_world->m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-	pos1 = sf::Vector2f{ 900.f, 250.f };
-	m_world->m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-
-	
-	pos1 = sf::Vector2f{ 1400.f, 600.f };
-
-	
-	
-
-	m_ship_manager = std::make_unique<ShipFactory>();
-
-
-	m_world->m_entities.push_front(m_ship_manager->createEntity(pos1));
+	m_world->Init();
 	
 	m_controller = std::make_unique<ShipController>();
 
 	for (auto itr = m_world->m_entities.cbegin(); itr != m_world->m_entities.cend(); ++itr)
 	{
-		itr->get()->subscribe(m_world.get());
 		if (itr->get()->getEntityType() == EntityType::ET_Ship)
 		{
 			m_controller->subscribe(static_cast<Ship*>(itr->get()));
+			itr->get()->subscribe(m_world.get());
 		}
 	}
-
 }
 
 void GameInstance::run()
@@ -75,11 +40,6 @@ void GameInstance::run()
 		update(delta_time);
 		render();
 	}
-}
-
-void GameInstance::addEntity(std::unique_ptr<Entity> in_entity)
-{
-	//m_entities.push_front(in_entity);
 }
 
 void GameInstance::processInput()

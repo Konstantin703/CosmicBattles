@@ -5,9 +5,13 @@
 
 void ShipController::handleInput()
 {
+	if (!m_ship)
+	{
+		return;
+	}
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-
 		m_ship->setCurrentRotationSpeed(-m_ship->getRotationSpeed());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
@@ -25,11 +29,9 @@ void ShipController::handleInput()
 
 	if (sf::Event::KeyReleased && !sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-
 		if (m_ship->isAccelerating())
 		{
 			m_ship->setIsAccelerating(false);
-
 		}
 	}
 
