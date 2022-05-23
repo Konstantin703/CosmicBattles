@@ -28,7 +28,7 @@ class Ship : public Entity
 public:
 	Ship(const sf::Texture& in_texture, const sf::Vector2f& in_position = sf::Vector2f(), const float in_direction = 0.f);
 	
-	virtual ~Ship() {};
+	virtual ~Ship() = default;
 
 	inline void setCurrentRotationSpeed(float in_value) { m_ship_stats.current_rotate_speed = in_value; }
 	inline float getRotationSpeed() const { return m_ship_stats.max_rotate_speed; }

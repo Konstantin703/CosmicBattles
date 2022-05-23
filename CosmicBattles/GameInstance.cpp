@@ -8,14 +8,17 @@
 #include <iostream>
 #include <memory>
 #include <algorithm>
+#include "AsteroidManager.h"
 
 GameInstance::GameInstance()
 {
 	m_window.create(sf::VideoMode::getDesktopMode(), m_game_name, sf::Style::Fullscreen);
 	initializeBackground();
 
+	m_asteroid_manager = std::make_unique<AsteroidManager>();
+
 	m_world = std::make_unique<GameWorld>();
-	m_world->Init();
+	m_world->init();
 	
 	m_controller = std::make_unique<ShipController>();
 
@@ -58,29 +61,12 @@ void GameInstance::processInput()
 
 void GameInstance::update(float delta_time)
 {
+	m_asteroid_manager->update(delta_time, m_world.get());
+
 	for (auto itr = m_world->m_entities.cbegin(); itr != m_world->m_entities.cend(); ++itr)
 	{
 		itr->get()->update(delta_time);
-		// check if current instance is colliding with another
-		for (auto inner_itr = m_world->m_entities.cbegin(); inner_itr != m_world->m_entities.cend(); ++inner_itr)
-		{
-			if (itr->get() == inner_itr->get())
-			{
-				continue;
-			}
-
-			if (inner_itr->get()->getEntityType() != EntityType::ET_Asteroid)
-			{
-				continue;
-			}
-
-			if (itr->get()->getEntityBounds().intersects(inner_itr->get()->getEntityBounds()))
-			{
-				inner_itr->get()->setRemove();
-				itr->get()->setRemove();
-				break;
-			}
-		}
+		m_world->checkCollision(itr->get());
 	}
 
 	m_world->m_entities.remove_if([](std::unique_ptr<Entity> const & entity) { return entity->shouldRemove(); });

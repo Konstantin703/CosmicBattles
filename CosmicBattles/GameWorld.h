@@ -19,12 +19,12 @@ class GameWorld
 public:
 	GameWorld() = default;
 
-	void Init();
-
+	void init();
 	void onFactoryNotify(Entity* in_entity);
 
+	void checkCollision(Entity* in_entity);
+
 	std::unique_ptr<BaseFactory> m_bullet_manager;
-	std::unique_ptr<BaseFactory> m_asteroid_manager;
 	std::unique_ptr<BaseFactory> m_ship_manager;
 
 	EntityList m_entities;

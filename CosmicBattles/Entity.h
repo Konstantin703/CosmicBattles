@@ -27,6 +27,8 @@ public:
 		m_sprite->setPosition(m_position);
 		m_sprite->setRotation(m_direction);
 		m_sprite->setOrigin((in_texture.getSize().x / 2), (in_texture.getSize().y / 2));
+
+		m_direction = in_direction;
 	}
 
 	virtual ~Entity() = default;
@@ -57,7 +59,7 @@ protected:
 	sf::Vector2f m_position;
 	float m_direction;
 	EntityType m_type = EntityType::None;
-
+	//
 	GameWorld* m_listener;
 
 };
