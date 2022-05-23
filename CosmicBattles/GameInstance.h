@@ -10,11 +10,13 @@
 #include <memory>
 #include <string>
 #include <forward_list>
+#include "AsteroidManager.h"
+
 
 class GameInstance
 {
 	using SpriteVector = std::vector<std::unique_ptr<sf::Sprite>>;
-	using EntityVector = std::forward_list<std::unique_ptr<Entity>>;
+
 public:
 	GameInstance();
 	
@@ -26,10 +28,9 @@ private:
 	sf::RenderWindow m_window;
 	SpriteVector m_background;
 
-	std::unique_ptr<BaseFactory> m_asteroid_manager;
-	std::unique_ptr<BaseFactory> m_ship_manager;
-
-	EntityVector m_entities;
+	std::unique_ptr<ShipController> m_controller;
+	std::unique_ptr<GameWorld> m_world;
+	std::unique_ptr<AsteroidManager> m_asteroid_manager;
 
 	void processInput();
 	void update(float delta_time);

@@ -1,47 +1,35 @@
 #include "GameInstance.h"
 
 #include "SFML/System/Clock.hpp"
-
-#include "AsteroidsFactory.h"
-#include "BulletBase.h"
 #include "Entity.h"
 #include "GameWorld.h"
 #include "Ship.h"
 #include "ShipController.h"
-#include "ShipFactory.h"
-
 #include <iostream>
 #include <memory>
 #include <algorithm>
+#include "AsteroidManager.h"
 
 GameInstance::GameInstance()
 {
 	m_window.create(sf::VideoMode::getDesktopMode(), m_game_name, sf::Style::Fullscreen);
 	initializeBackground();
 
-	////TODO: randomize position and rotation closer to playable single player demo
-	m_asteroid_manager = std::make_unique<AsteroidsFactory>();
+	m_asteroid_manager = std::make_unique<AsteroidManager>();
+
+	m_world = std::make_unique<GameWorld>();
+	m_world->init();
 	
-	sf::Vector2f pos1{ 300.f, 400.f };
-	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
+	m_controller = std::make_unique<ShipController>();
 
-	pos1 = sf::Vector2f{ 500.f, 250.f };
-	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-	pos1 = sf::Vector2f{ 800.f, 650.f };
-	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-	pos1 = sf::Vector2f{ 500.f, 950.f };
-	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-	pos1 = sf::Vector2f{ 900.f, 250.f };
-	m_entities.push_front(m_asteroid_manager->createEntity(pos1));
-
-
-	m_ship_manager = std::make_unique<ShipFactory>();
-	pos1 = sf::Vector2f{ 1200.f, 800.f };
-
-	m_entities.push_front(m_ship_manager->createEntity(pos1));
+	for (auto itr = m_world->m_entities.cbegin(); itr != m_world->m_entities.cend(); ++itr)
+	{
+		if (itr->get()->getEntityType() == EntityType::ET_Ship)
+		{
+			m_controller->subscribe(static_cast<Ship*>(itr->get()));
+			itr->get()->subscribe(m_world.get());
+		}
+	}
 }
 
 void GameInstance::run()
@@ -66,35 +54,22 @@ void GameInstance::processInput()
 		{
 			m_window.close();
 		}
+
+		m_controller->handleInput();
 	}
 }
 
 void GameInstance::update(float delta_time)
 {
-	for (auto itr = m_entities.cbegin(); itr != m_entities.cend(); ++itr)
+	m_asteroid_manager->update(delta_time, m_world.get());
+
+	for (auto itr = m_world->m_entities.cbegin(); itr != m_world->m_entities.cend(); ++itr)
 	{
 		itr->get()->update(delta_time);
-		// check if current instance is colliding with another
-		for (auto inner_itr = m_entities.cbegin(); inner_itr != m_entities.cend(); ++inner_itr)
-		{
-			if (itr->get() == inner_itr->get())
-			{
-				continue;
-			}
-
-			if (inner_itr->get()->getEntityType() == EntityType::ET_Ship)
-			{
-				continue;
-			}
-
-			if (itr->get()->getEntityBounds().intersects(inner_itr->get()->getEntityBounds()))
-			{
-				inner_itr->get()->setRemove();
-			}
-		}
+		m_world->checkCollision(itr->get());
 	}
 
-	m_entities.remove_if([](std::unique_ptr<Entity> const & entity) { return entity->shouldRemove(); });
+	m_world->m_entities.remove_if([](std::unique_ptr<Entity> const & entity) { return entity->shouldRemove(); });
 }
 
 void GameInstance::render()
@@ -107,7 +82,7 @@ void GameInstance::render()
 	}
 
 	// drawn entities
-	for (auto itr = m_entities.cbegin(); itr != m_entities.cend(); ++itr)
+	for (auto itr = m_world->m_entities.cbegin(); itr != m_world->m_entities.cend(); ++itr)
 	{
 		m_window.draw(itr->get()->getDrawable());
 	}

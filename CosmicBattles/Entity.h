@@ -4,6 +4,9 @@
 #include "SFML/Graphics.hpp"
 #include <memory>
 #include "SFML/Graphics/Texture.hpp"
+#include "GameWorld.h"
+
+class GameWorld;
 
 enum class EntityType
 {
@@ -24,6 +27,8 @@ public:
 		m_sprite->setPosition(m_position);
 		m_sprite->setRotation(m_direction);
 		m_sprite->setOrigin((in_texture.getSize().x / 2), (in_texture.getSize().y / 2));
+
+		m_direction = in_direction;
 	}
 
 	virtual ~Entity() = default;
@@ -45,6 +50,8 @@ public:
 
 	inline EntityType getEntityType() const { return m_type; }
 
+	void subscribe(GameWorld* in_listener) { m_listener = in_listener; }
+
 protected:
 	bool m_should_remove = false;
 
@@ -52,6 +59,8 @@ protected:
 	sf::Vector2f m_position;
 	float m_direction;
 	EntityType m_type = EntityType::None;
+	//
+	GameWorld* m_listener;
 
 };
 #endif 

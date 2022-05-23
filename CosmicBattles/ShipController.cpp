@@ -3,39 +3,44 @@
 #include "SFML/Window/Keyboard.hpp"
 
 
-void ShipController::handleInput(Ship* in_ship)
+void ShipController::handleInput()
 {
+	if (!m_ship)
+	{
+		return;
+	}
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		in_ship->setCurrentRotationSpeed(-in_ship->getRotationSpeed());
+		m_ship->setCurrentRotationSpeed(-m_ship->getRotationSpeed());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		in_ship->setCurrentRotationSpeed(in_ship->getRotationSpeed());
+		m_ship->setCurrentRotationSpeed(m_ship->getRotationSpeed());
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		in_ship->setIsAccelerating(true);
+		m_ship->setIsAccelerating(true);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		in_ship->shoot();
+		m_ship->shoot();
 	}
 
 	if (sf::Event::KeyReleased && !sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		if (in_ship->isAccelerating())
+		if (m_ship->isAccelerating())
 		{
-			in_ship->setIsAccelerating(false);
+			m_ship->setIsAccelerating(false);
 		}
 	}
 
 	if (sf::Event::KeyReleased &&
 		!(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)))
 	{
-		if (in_ship->isRotating())
+		if (m_ship->isRotating())
 		{
-			in_ship->setCurrentRotationSpeed(0.f);
+			m_ship->setCurrentRotationSpeed(0.f);
 		}
 	}
 }

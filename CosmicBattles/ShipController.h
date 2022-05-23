@@ -11,7 +11,12 @@ public:
 	ShipController() = default;
 	~ShipController() = default;
 
-	void handleInput(Ship* in_ship);
+	void handleInput();
+
+	void subscribe(Ship* in_ship) { m_ship = in_ship; }
+
+private:
+	Ship* m_ship;
 
 };
 #endif

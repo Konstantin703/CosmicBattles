@@ -13,22 +13,17 @@
 Ship::Ship(const sf::Texture& in_texture, const sf::Vector2f& in_position, const float in_direction)
 	: Entity{ in_texture, in_position, in_direction }
 {
-	m_ship_stats.max_rotate_speed = 120.f;
-	m_ship_stats.move_speed = 250.f;
+	m_ship_stats.max_rotate_speed = 180.f;
+	m_ship_stats.move_speed = 280.f;
 	m_ship_stats.slow_down_ratio = 2.f;
 
-	m_type = EntityType::ET_Ship;
+	m_reload_rate = 0.5f;
 
-	m_controller = std::make_unique<ShipController>();
+	m_type = EntityType::ET_Ship;
 }
 
 void Ship::update(float in_delta_time)
 {
-	if (m_controller.get())
-	{
-		m_controller->handleInput(this);
-	}
-
 	if (m_is_accelerating)
 	{
 		m_ship_stats.current_direction = m_sprite->getRotation();
@@ -47,6 +42,8 @@ void Ship::update(float in_delta_time)
 
 	m_sprite->move(delta_x, delta_y);
 	m_sprite->rotate(m_ship_stats.current_rotate_speed * in_delta_time);
+	
+	m_direction = m_sprite->getRotation();
 }
 
 void Ship::shoot()
@@ -56,6 +53,7 @@ void Ship::shoot()
 		return;
 	}
 	m_current_reload_rate = m_reload_rate;
+	m_listener->onFactoryNotify(this);
 	std::cout << "Shoot!!!" << std::endl;
 }
 
