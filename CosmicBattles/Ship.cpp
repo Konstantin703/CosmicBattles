@@ -62,7 +62,7 @@ void Ship::shoot()
 		return;
 	}
 	m_current_reload_rate = m_reload_rate;
-	m_listener->onFactoryNotify(this);
+	m_listener->onNotify(*this);
 	std::cout << "Shoot!!!" << std::endl;
 }
 

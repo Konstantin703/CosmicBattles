@@ -15,15 +15,11 @@ GameInstance::GameInstance()
 	m_window.create(sf::VideoMode::getDesktopMode(), m_game_name, sf::Style::Fullscreen);
 	initializeBackground();
 
-	m_asteroid_manager = std::make_unique<AsteroidManager>();
-
 	m_world = std::make_unique<GameWorld>();
 	m_world->init();
 	
 	m_controller = std::make_unique<ShipController>();
 
-	// this shouldn't be here because at this time entities list has only one ship
-	// (if the game is single player)
 	auto itr = std::find_if(m_world->m_entities.cbegin(), m_world->m_entities.cend(),
 		[](std::unique_ptr<Entity> const & entity) { return entity->getEntityType() == EntityType::ET_Ship; });
 	
@@ -63,7 +59,7 @@ void GameInstance::processInput()
 
 void GameInstance::update(float delta_time)
 {
-	m_asteroid_manager->update(delta_time, m_world.get());
+	m_world->update(delta_time);
 
 	for (auto itr = m_world->m_entities.cbegin(); itr != m_world->m_entities.cend(); ++itr)
 	{

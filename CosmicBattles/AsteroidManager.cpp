@@ -59,32 +59,6 @@ std::unique_ptr<Entity> AsteroidManager::createEntity(const sf::Vector2f in_posi
 	return std::make_unique<Asteroid>(*m_texture_vector[rand() % m_texture_vector.size()].get(), in_position, in_direction);
 }
 
-void AsteroidManager::update(float in_delta_time, GameWorld* in_world)
-{
-	m_current_spawn_time += in_delta_time;
-	if (m_current_spawn_time > m_max_spawn_time)
-	{
-		// find ship location
-		// probably better notify the controller
-		// and get the postion there
-		sf::Vector2f ship_loc;
-
-		auto itr = std::find_if(in_world->m_entities.cbegin(), in_world->m_entities.cend(),
-			[](std::unique_ptr<Entity> const & entity) { return entity->getEntityType() == EntityType::ET_Ship; });
-		if (itr != in_world->m_entities.cend())
-		{
-			ship_loc = itr->get()->getPosition(); 
-		}
-
-		sf::Vector2f start = getRandomPosition();
-		std::unique_ptr<Entity> entity = createEntity(start, MathLibrary::calculateAngle(start, ship_loc));
-		
-		in_world->m_entities.push_front(std::move(entity));
-
-		m_current_spawn_time = 0.f;
-	}
-}
-
 sf::Vector2f AsteroidManager::getRandomPosition()
 {
 	srand(time(nullptr));

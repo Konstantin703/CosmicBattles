@@ -7,7 +7,7 @@ class BaseObserver
 {
 public:
 	virtual ~BaseObserver() = default;
-	virtual void onNotify() = 0;
+	virtual void onNotify(const Entity& in_entity) = 0;
 };
 
 #endif

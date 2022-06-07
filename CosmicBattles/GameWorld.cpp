@@ -5,22 +5,68 @@
 #include "BulletFactory.h"
 #include <memory>
 #include "ShipFactory.h"
+#include <utility>
+#include "AsteroidManager.h"
+#include "MathLibrary.h"
 
 void GameWorld::init()
 {
-	m_bullet_manager = std::make_unique<BulletFactory>();
+	m_factories.insert(std::make_pair(static_cast<int>(EntityType::ET_Bullet), std::make_unique<BulletFactory>()));
+	m_factories.insert(std::make_pair(static_cast<int>(EntityType::ET_Asteroid), std::make_unique<AsteroidManager>()));
 	
-	m_ship_manager = std::make_unique<ShipFactory>();
-	m_entities.push_front(m_ship_manager->createEntity(sf::Vector2f(1200.f, 600.f)));
+	std::unique_ptr<BaseFactory> ship_factory = std::make_unique<ShipFactory>();
+	m_entities.push_front(ship_factory->createEntity(sf::Vector2f(1200.f, 600.f)));
+
+	m_factories.insert(std::make_pair(static_cast<int>(EntityType::ET_Ship), std::move(ship_factory)));
 }
 
-void GameWorld::onFactoryNotify(Entity* in_entity)
+void GameWorld::update(float in_delta_time)
 {
-	if (!m_bullet_manager.get())
+	// for asteroids spawning 
+	m_current_spawn_time += in_delta_time;
+	if (m_current_spawn_time > m_max_spawn_time)
 	{
-		return;
+		sf::Vector2f ship_loc;
+
+		auto itr = std::find_if(m_entities.cbegin(), m_entities.cend(),
+			[](std::unique_ptr<Entity> const & entity) { return entity->getEntityType() == EntityType::ET_Ship; });
+		if (itr != m_entities.cend())
+		{
+			ship_loc = itr->get()->getPosition();
+		}
+
+		auto factory = m_factories.find(static_cast<int>(EntityType::ET_Asteroid));
+		sf::Vector2f start = static_cast<AsteroidManager*>(factory->second.get())->getRandomPosition();
+
+		std::unique_ptr<Entity> entity = factory->second.get()->createEntity(start, MathLibrary::calculateAngle(start, ship_loc));
+		entity->subscribe(this);
+		m_entities.push_front(std::move(entity));
+
+		m_current_spawn_time = 0.f;
 	}
-	m_entities.push_front(m_bullet_manager->createEntity(in_entity->getPosition(), in_entity->getDirection()));
+}
+
+void GameWorld::onNotify(const Entity& in_entity)
+{
+	switch (in_entity.getEntityType())
+	{
+	case EntityType::ET_Ship:
+		m_entities.push_front(
+			m_factories.find(
+				static_cast<int>(EntityType::ET_Bullet))->second.get()->createEntity(
+					in_entity.getPosition(), in_entity.getDirection()
+				)
+		);
+		break;
+	case EntityType::ET_Asteroid:
+		m_entities.push_front(
+			m_factories.find(
+				static_cast<int>(EntityType::ET_Asteroid))->second.get()->createEntity(
+					in_entity.getPosition(), in_entity.getDirection()
+				)
+		);
+		break;
+	}
 }
 
 void GameWorld::checkCollision(Entity* in_entity)

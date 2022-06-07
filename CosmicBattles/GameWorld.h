@@ -9,30 +9,36 @@
 
 #include "BaseFactory.h"
 #include <forward_list>
+#include "BaseObserver.h"
+#include <unordered_map>
 
-// collision manager is world
 class Entity;
-class BaseFactory;
 
-class GameWorld
+class GameWorld: public BaseObserver
 {
 	using EntityList = std::forward_list<std::unique_ptr<Entity>>;
+	using FactoryMap = std::unordered_map<int, std::unique_ptr<BaseFactory>>;
 public:
 	GameWorld() = default;
+	virtual ~GameWorld() = default;
 
 	void init();
-	void onFactoryNotify(Entity* in_entity);
+
+	void update(float in_delta_time);
+
+	void onNotify(const Entity& in_entity) override;
 
 	void checkCollision(Entity* in_entity);
 
-	std::unique_ptr<BaseFactory> m_bullet_manager;
-	std::unique_ptr<BaseFactory> m_ship_manager;
-
+	FactoryMap m_factories;
 	EntityList m_entities;
 
 private:
-	const float X_BOARDER = 1500.f;
-	const float Y_BOARDER = 900.f;
+	const float X_BOARDER = 2000.f;
+	const float Y_BOARDER = 1500.f;
+
+	float m_max_spawn_time = 1.5f;
+	float m_current_spawn_time = 0.f;
 };
 
 #endif

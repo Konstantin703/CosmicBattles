@@ -30,7 +30,6 @@ private:
 
 	std::unique_ptr<ShipController> m_controller;
 	std::unique_ptr<GameWorld> m_world;
-	std::unique_ptr<AsteroidManager> m_asteroid_manager;
 
 	void processInput();
 	void update(float delta_time);

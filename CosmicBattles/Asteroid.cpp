@@ -24,5 +24,9 @@ void Asteroid::update(float in_delta_time)
 void Asteroid::onHit(const Entity& in_entity)
 {
 	// asteroid manager -> notify
+	if (m_listener)
+	{
+		m_listener->onNotify(*this);
+	}
 	setRemove();
 }
