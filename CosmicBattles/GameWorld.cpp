@@ -35,24 +35,8 @@ void GameWorld::checkCollision(Entity* in_entity)
 		// process entity intersection
 		if (in_entity->getEntityBounds().intersects(itr->get()->getEntityBounds()))
 		{
-			// if it is bullet and shouldn't collide with owner
-			if (in_entity->getEntityType() == EntityType::ET_Bullet && itr->get()->getEntityType() != EntityType::ET_Ship)
-			{
-				// TODO: call events 
-				// asteroid crushes into smaller parts
-				// pick ups appear
-				in_entity->setRemove();
-				itr->get()->setRemove();
-				break;
-			}
-
-			// if asteroid collide ship
-			// do damage to ship
-			if (in_entity->getEntityType() == EntityType::ET_Asteroid && itr->get()->getEntityType() == EntityType::ET_Ship)
-			{
-				in_entity->setRemove();
-				break;
-			}
+			in_entity->onHit(*itr->get());
+			break;
 		}
 
 		// process borders intersection

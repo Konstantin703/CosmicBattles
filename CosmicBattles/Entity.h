@@ -35,6 +35,7 @@ public:
 
 	// virtual method to override in child classes
 	virtual void update(float in_delta_time) = 0;
+	virtual void onHit(const Entity& in_entity) = 0;
 
 	sf::Drawable& getDrawable() const { return *m_sprite.get(); }
 	sf::FloatRect getEntityBounds() const { return m_sprite->getGlobalBounds(); }

@@ -3,6 +3,13 @@
 
 #include "Entity.h"
 
+enum class AsteroidSize
+{
+	AS_Large,
+	AS_Medium,
+	None
+};
+
 class Asteroid : public Entity
 {
 public:
@@ -10,8 +17,14 @@ public:
 	virtual ~Asteroid() = default;
 
 	void update(float in_delta_time) override;
-private:
 
+	inline AsteroidSize getAsteroidSize() const { return m_size; }
+	inline void setAsteroidSize(AsteroidSize in_size) { m_size = in_size; }
+
+	void onHit(const Entity& in_entity) override;
+	
+private:
+	AsteroidSize m_size = AsteroidSize::None;
 };
 
 #endif // ASTERIOD_H

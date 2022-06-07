@@ -42,6 +42,7 @@ public:
 	bool canShoot() const;
 
 	void update(float in_delta_time) override;
+	void onHit(const Entity& in_entity) override;
 
 private:
 	bool m_is_accelerating = false;

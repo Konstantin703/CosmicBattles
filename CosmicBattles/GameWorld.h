@@ -10,6 +10,7 @@
 #include "BaseFactory.h"
 #include <forward_list>
 
+// collision manager is world
 class Entity;
 class BaseFactory;
 

@@ -22,13 +22,15 @@ GameInstance::GameInstance()
 	
 	m_controller = std::make_unique<ShipController>();
 
-	for (auto itr = m_world->m_entities.cbegin(); itr != m_world->m_entities.cend(); ++itr)
+	// this shouldn't be here because at this time entities list has only one ship
+	// (if the game is single player)
+	auto itr = std::find_if(m_world->m_entities.cbegin(), m_world->m_entities.cend(),
+		[](std::unique_ptr<Entity> const & entity) { return entity->getEntityType() == EntityType::ET_Ship; });
+	
+	if (itr != m_world->m_entities.cend())
 	{
-		if (itr->get()->getEntityType() == EntityType::ET_Ship)
-		{
-			m_controller->subscribe(static_cast<Ship*>(itr->get()));
-			itr->get()->subscribe(m_world.get());
-		}
+		m_controller->subscribe(static_cast<Ship*>(itr->get()));
+		itr->get()->subscribe(m_world.get());
 	}
 }
 

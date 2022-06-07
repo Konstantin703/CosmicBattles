@@ -46,6 +46,15 @@ void Ship::update(float in_delta_time)
 	m_direction = m_sprite->getRotation();
 }
 
+void Ship::onHit(const Entity& in_entity)
+{
+	if (in_entity.getEntityType() == EntityType::ET_Asteroid) // or bullet in further iterations
+	{
+		m_is_accelerating = false;
+		m_ship_stats.current_direction = in_entity.getDirection() + 90.f;
+	}
+}
+
 void Ship::shoot()
 {
 	if (!canShoot())

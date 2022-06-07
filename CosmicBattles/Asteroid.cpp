@@ -20,3 +20,9 @@ void Asteroid::update(float in_delta_time)
 
 	m_sprite->move(delta_x, delta_y);
 }
+
+void Asteroid::onHit(const Entity& in_entity)
+{
+	// asteroid manager -> notify
+	setRemove();
+}

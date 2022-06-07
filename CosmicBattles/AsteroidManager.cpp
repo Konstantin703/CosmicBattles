@@ -3,6 +3,7 @@
 #include "GameWorld.h"
 #include <complex>
 #include "MathLibrary.h"
+#include <algorithm>
 
 AsteroidManager::AsteroidManager()
 {
@@ -67,16 +68,18 @@ void AsteroidManager::update(float in_delta_time, GameWorld* in_world)
 		// probably better notify the controller
 		// and get the postion there
 		sf::Vector2f ship_loc;
-		for (auto itr = in_world->m_entities.cbegin(); itr != in_world->m_entities.cend(); ++itr)
+
+		auto itr = std::find_if(in_world->m_entities.cbegin(), in_world->m_entities.cend(),
+			[](std::unique_ptr<Entity> const & entity) { return entity->getEntityType() == EntityType::ET_Ship; });
+		if (itr != in_world->m_entities.cend())
 		{
-			if (itr->get()->getEntityType() == EntityType::ET_Ship)
-			{
-				ship_loc = itr->get()->getPosition();
-			}
+			ship_loc = itr->get()->getPosition(); 
 		}
 
 		sf::Vector2f start = getRandomPosition();
-		in_world->m_entities.push_front(createEntity(start, MathLibrary::calculateAngle(start, ship_loc)));
+		std::unique_ptr<Entity> entity = createEntity(start, MathLibrary::calculateAngle(start, ship_loc));
+		
+		in_world->m_entities.push_front(std::move(entity));
 
 		m_current_spawn_time = 0.f;
 	}
